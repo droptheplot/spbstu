@@ -1,0 +1,75 @@
+\documentclass[a4paper,12pt,russian]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{geometry}
+
+\newcommand{\insertInstitute}{
+  Институт компьютерных наук и технологий\linebreak
+  Высшая школа «Киберфизических систем и управления»
+}
+\newcommand{\insertTitle}{Название работы}
+\newcommand{\insertAuthor}{И. О. Выполняющий}
+\newcommand{\insertVerifier}{И. О. Проверящий}
+\newcommand{\insertVerifierPosition}{Главный проверяющий}
+
+\input{../../common.tex}
+
+\begin{document}
+\input{../../title.tex}
+
+\newpage
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\section{Задание}
+
+\subsection{Описание}
+На языке программирования создать программу, которая будет просить у пользователя ввести начальные и конечные значения для диапазона расчета X, шаг изменения переменной deltaX. Программа должна вывести на экран таблицу (которая корректно выводит значения для разного набора исходных данных - столбцы «не едут») с номером строки, значению X, значению полученного выражения. В случае невозможности вычисления выражения для конкретного случая X, num (деление на ноль, логарифм из отрицательного числа, значение синуса или консинуса равно 0), в строке таблицы необходимо вывести сообщение об ошибке.
+
+\subsection{Формула}
+\begin{equation*}
+  f(x) = \min\left(\ln\left(1-\frac{61}{\cos(x)}\right), \frac{\cot(x)}{61}\right)
+\end{equation*}
+\clearpage
+
+\section{Решение}
+
+\subsection{Описание}
+Решение выполнено на языке программирования общего назначения Clojure, современном диалектe Lisp, работающем на платформе JVM.
+
+\subsection{Запуск}
+Для запуска решения необходимо запустить \textbf{clj}, указав название нужного пространства имен с функцией \textbf{main}.
+\begin{lstlisting}[language=bash]
+clj -m mincosctg
+\end{lstlisting}
+
+\subsection{Пример}
+После запуска решения программа попросит ввести начальное значение X, конечное значение X и шаг изменения X. После чего выведет на экран таблицу с результатами вычисления формулы для каждого значения X или \textbf{Error}, если такое вычисление невозможно.
+\begin{lstlisting}[language=bash]
+Enter start:
+0
+Enter end:
+20
+Enter delta:
+2
+
+| :x |      :min |
+|----+-----------|
+|  0 |     Error |
+|  2 | -0.007503 |
+|  4 |  0.014159 |
+|  6 |     Error |
+|  8 | -0.002411 |
+| 10 |  0.025284 |
+| 12 |     Error |
+| 14 |     Error |
+| 16 |  0.054530 |
+| 18 |     Error |
+\end{lstlisting}
+
+\end{document}

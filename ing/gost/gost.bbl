@@ -1,0 +1,51 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.9 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{dirac}{book}{}
+      \name{author}{1}{}{%
+        {{hash=59f69be9850fe153281f4c04d5b4b69a}{%
+           family={Чалдаева},
+           familyi={Ч\bibinitperiod},
+           given={Л.\bibnamedelimi А.},
+           giveni={Л\bibinitperiod\bibinitdelim А\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {М. Юрайт}%
+      }
+      \strng{namehash}{59f69be9850fe153281f4c04d5b4b69a}
+      \strng{fullhash}{59f69be9850fe153281f4c04d5b4b69a}
+      \strng{bibnamehash}{59f69be9850fe153281f4c04d5b4b69a}
+      \strng{authorbibnamehash}{59f69be9850fe153281f4c04d5b4b69a}
+      \strng{authornamehash}{59f69be9850fe153281f4c04d5b4b69a}
+      \strng{authorfullhash}{59f69be9850fe153281f4c04d5b4b69a}
+      \field{sortinit}{Ч}
+      \field{sortinithash}{65e0a9af0b269e9564fc6eebe51df900}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Чалдаева, Л. А. Экономика предприятия: учебник для бакалавров}
+      \field{year}{2013}
+      \field{pages}{411}
+      \range{pages}{1}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

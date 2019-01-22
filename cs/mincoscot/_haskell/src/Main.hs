@@ -18,9 +18,11 @@ main = do
   case xs of
     Right xs ->
       let vals = map toString . map minCosCot $ xs
-          lcol = map (padRight (maxLength . map show $ xs)) (map show xs)
-          rcol = map (padRight (maxLength vals)) vals
-       in mapM_ (\(l, r) -> printf "%s | %s\n" l r) . zip lcol $ rcol
+          lmax = maxLength $ map show xs
+          rmax = maxLength vals
+          lcol = map (padRight lmax) (map (printf "%.f") xs)
+          rcol = map (padRight rmax) vals
+       in mapM_ (\(l, r) -> printf "%s | %s\n" l r) $ (padRight lmax "X", padRight rmax "Result") : (zip lcol rcol)
     Left err -> putStrLn err
 
 minCosCot :: Double -> Double

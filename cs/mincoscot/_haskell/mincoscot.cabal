@@ -1,0 +1,24 @@
+name:          mincoscot
+version:       0.1.0.0
+homepage:      https://github.com/droptheplot/spbstu
+license:       WTFPL
+author:        Sergei Novikov
+copyright:     2018 Sergei Novikov
+build-type:    Simple
+cabal-version: >=1.10
+
+executable mincoscot
+  hs-source-dirs:   src
+  main-is:          Main.hs
+  default-language: Haskell2010
+  build-depends:    base >= 4.7 && < 5
+               ,    text
+
+test-suite test
+  type:           exitcode-stdio-1.0
+  main-is:        Spec.hs
+  ghc-options:    -Wall
+  build-depends:  base >= 4.7 && < 5
+               ,  QuickCheck >= 2.0
+               ,  hspec
+  hs-source-dirs: test src

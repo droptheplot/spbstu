@@ -6,25 +6,84 @@
 \usepackage{xcolor}
 \usepackage{tabularx}
 \usepackage{geometry}
+\usepackage{tikz}
+\usepackage{titlesec}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{indentfirst}
+
+\usetikzlibrary{shapes,arrows}
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{decision} = [
+  diamond,
+  aspect=3,
+  draw,
+  fill=yellow!20,
+  % text width=5em,
+  text badly centered,
+  node distance=2cm,
+  % inner sep=0pt
+]
+\tikzstyle{process} = [
+  rectangle,
+  draw,
+  fill=blue!20,
+  node distance=2cm,
+  % text width=10em,
+  text centered,
+  minimum height=3em
+]
+\tikzstyle{terminal} = [
+  rectangle,
+  draw,
+  fill=red!20,
+  node distance=2cm,
+  text width=5em,
+  text centered,
+  minimum height=3em,
+  rounded corners
+]
+\tikzstyle{io} = [
+  trapezium,
+  trapezium left angle=120,
+  trapezium right angle=60,
+  draw,
+  fill=green!20,
+  node distance=2cm,
+  % text width=5em,
+  text centered,
+  minimum height=3em
+]
+
+\lstdefinelanguage{clojure} {
+  morekeywords={defn, as->, ->>, try, catch, ns},
+  morestring=[b]",
+  morestring=[b]',
+}
 
 \newcommand{\insertInstitute}{
   Институт компьютерных наук и технологий\linebreak
-  Высшая школа «Киберфизических систем и управления»
+  Кафедра «Информационные системы и технологии»
 }
-\newcommand{\insertTitle}{Название работы}
-\newcommand{\insertAuthor}{И. О. Выполняющий}
-\newcommand{\insertVerifier}{И. О. Проверящий}
-\newcommand{\insertVerifierPosition}{Главный проверяющий}
+\newcommand{\insertTitle}{Вычисление формулы для диапазона чисел}
+\newcommand{\insertAuthor}{С. А. Новиков}
+\newcommand{\insertAuthorPosition}{студент гр 13532/1}
+\newcommand{\insertVerifier}{C. В. Хлопин}
+\newcommand{\insertVerifierPosition}{доцент, к.т.н.}
+
+\newcommand{\sectionbreak}{\clearpage}
+
+\sloppy
 
 \input{../../common.tex}
 
 \begin{document}
+
 \input{../../title.tex}
 
 \newpage
-\tableofcontents
-\clearpage
 \pagenumbering{arabic}
+
+\tableofcontents
 
 \section{Задание}
 
@@ -40,12 +99,12 @@
 \section{Решение}
 
 \subsection{Описание}
-Решение выполнено на языке программирования общего назначения Clojure, современном диалектe Lisp, работающем на платформе JVM.
+Решение выполнено на языке программирования общего назначения Clojure, современном диалектe Lisp, созданном в 2007 году. Язык работает на платформе JVM, поощряет функциональное программирование, поддерживает гомоиконность и развитую систему лисп-макросов. Транслятор Clojure свободно распространяется на условиях Eclipse Public License.
 
 \subsection{Запуск}
-Для запуска решения необходимо запустить \textbf{clj}, указав название нужного пространства имен с функцией \textbf{main}.
+Для запуска решения необходимо запустить \textbf{clj}, указав название нужного пространства имен с функцией \textbf{main} в директории \textbf{src}.
 \begin{lstlisting}[language=bash]
-clj -m mincosctg
+clj -m mincoscot
 \end{lstlisting}
 
 \subsection{Пример}
@@ -54,7 +113,7 @@ clj -m mincosctg
 Enter start:
 0
 Enter end:
-20
+10
 Enter delta:
 2
 
@@ -65,11 +124,40 @@ Enter delta:
 |  4 |  0.014159 |
 |  6 |     Error |
 |  8 | -0.002411 |
-| 10 |  0.025284 |
-| 12 |     Error |
-| 14 |     Error |
-| 16 |  0.054530 |
-| 18 |     Error |
 \end{lstlisting}
+\clearpage
+
+\subsection{Исходный код}
+\lstinputlisting[language=clojure]{src/mincoscot.clj}
+
+\section{Блок-схема}
+
+\begin{center}
+\begin{tikzpicture}[node distance = 2cm, auto]
+  \node [terminal] (start) {Начало};
+  \node [io, below of=start] (ask-start-x) {Запросить начальное Х};
+  \node [io, below of=ask-start-x] (read-start-x) {Прочитать начальное Х};
+  \node [io, below of=read-start-x] (ask-end-x) {Запросить конечное Х};
+  \node [io, below of=ask-end-x] (read-end-x) {Прочитать конечное Х};
+  \node [io, below of=read-end-x] (ask-delta-x) {Запросить дельту Х};
+  \node [io, below of=ask-delta-x] (read-delta-x) {Прочитать дельту Х};
+  \node [decision, below of=read-delta-x] (loop) {Количество значений};
+  \node [process, below of=loop] (mincoscot) {Вычисление формулы для каждого значения};
+  \node [io, below of=mincoscot] (print) {Вывод таблицы на экран};
+  \node [terminal, below of=print] (end) {Конец};
+
+  \path [line] (start) -- (ask-start-x);
+  \path [line] (ask-start-x) -- (read-start-x);
+  \path [line] (read-start-x) -- (ask-end-x);
+  \path [line] (ask-end-x) -- (read-end-x);
+  \path [line] (read-end-x) -- (ask-delta-x);
+  \path [line] (ask-delta-x) -- (read-delta-x);
+  \path [line] (read-delta-x) -- (loop) ;
+  \path [line] (loop) -- (mincoscot);
+  \draw [->] (mincoscot.west) |- (loop.west);
+  \draw [->] (loop.east) -| (print.east);
+  \path [line] (print) -- (end);
+\end{tikzpicture}
+\end{center}
 
 \end{document}

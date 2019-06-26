@@ -1,0 +1,130 @@
+\documentclass[a4paper,12pt,russian]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{titlesec}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{indentfirst}
+
+\usetikzlibrary{shapes,arrows}
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{decision} = [
+  diamond,
+  aspect=3,
+  draw,
+  fill=yellow!20,
+  % text width=5em,
+  text badly centered,
+  node distance=2cm,
+  % inner sep=0pt
+]
+\tikzstyle{process} = [
+  rectangle,
+  draw,
+  fill=blue!20,
+  node distance=2cm,
+  % text width=10em,
+  text centered,
+  minimum height=3em
+]
+\tikzstyle{terminal} = [
+  rectangle,
+  draw,
+  fill=red!20,
+  node distance=2cm,
+  text width=5em,
+  text centered,
+  minimum height=3em,
+  rounded corners
+]
+\tikzstyle{io} = [
+  trapezium,
+  trapezium left angle=120,
+  trapezium right angle=60,
+  draw,
+  fill=green!20,
+  node distance=2cm,
+  % text width=5em,
+  text centered,
+  minimum height=3em
+]
+
+\lstdefinelanguage{clojure} {
+  morekeywords={defn, as->, ->>, try, catch, ns},
+  morestring=[b]",
+  morestring=[b]',
+}
+
+\newcommand{\insertInstitute}{
+  Институт компьютерных наук и технологий\linebreak
+  Высшая школа киберфизических систем и управления
+}
+\newcommand{\insertTitle}{ОТЧЕТ\par по дисциплине «Информатика»\par \textbf{Вычисление формулы для диапазона чисел}}
+\newcommand{\insertAuthor}{С. А. Новиков}
+\newcommand{\insertAuthorPosition}{студент гр 13532/1}
+\newcommand{\insertVerifier}{C. В. Хлопин}
+\newcommand{\insertVerifierPosition}{доцент, к.т.н.}
+
+\newcommand{\sectionbreak}{\clearpage}
+
+\sloppy
+
+\input{../../common.tex}
+
+\begin{document}
+
+\input{../../title.tex}
+
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{2}
+
+\tableofcontents
+
+\section{Реферат}
+
+Отчет 5 с.
+ПРОГРАММИРОВАНИЕ, ЯЗЫКИ ПРОГРАММИРОВАНИЯ
+Объектом исследования является написание программы для вычисления выражения по формуле.
+Цель работы — создать программу на любом языке программирования для вычисления значения Х и вывода сообщения об ошибке при невозможности вычисления значения.
+
+\section{Блок-схема}
+
+\begin{center}
+\begin{tikzpicture}[node distance = 2cm, auto]
+  \node [terminal] (start) {Начало};
+  \node [io, below of=start] (ask-start-x) {Запросить начальное Х};
+  \node [io, below of=ask-start-x] (read-start-x) {Прочитать начальное Х};
+  \node [io, below of=read-start-x] (ask-end-x) {Запросить конечное Х};
+  \node [io, below of=ask-end-x] (read-end-x) {Прочитать конечное Х};
+  \node [io, below of=read-end-x] (ask-delta-x) {Запросить дельту Х};
+  \node [io, below of=ask-delta-x] (read-delta-x) {Прочитать дельту Х};
+  \node [decision, below of=read-delta-x] (loop) {Количество значений};
+  \node [process, below of=loop] (mincoscot) {Вычисление формулы для каждого значения};
+  \node [io, below of=mincoscot] (print) {Вывод таблицы на экран};
+  \node [terminal, below of=print] (end) {Конец};
+
+  \path [line] (start) -- (ask-start-x);
+  \path [line] (ask-start-x) -- (read-start-x);
+  \path [line] (read-start-x) -- (ask-end-x);
+  \path [line] (ask-end-x) -- (read-end-x);
+  \path [line] (read-end-x) -- (ask-delta-x);
+  \path [line] (ask-delta-x) -- (read-delta-x);
+  \path [line] (read-delta-x) -- (loop) ;
+  \path [line] (loop) -- (mincoscot);
+  \draw [->] (mincoscot.west) |- (loop.west);
+  \draw [->] (loop.east) -| (print.east);
+  \path [line] (print) -- (end);
+\end{tikzpicture}
+\end{center}
+
+\section{Вывод}
+
+В ходе выполнения данного задания было обнаружено что в случае деления на ноль или взятия логарифма из отрицательного числа вычисление невозможно.
+
+\end{document}

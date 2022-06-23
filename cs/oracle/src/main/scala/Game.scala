@@ -1,7 +1,7 @@
 import scala.annotation.tailrec
 import scala.util.Random
 
-object Main2 extends App {
+object Game extends App {
   type Score = Int
 
   case class Team(name: String)

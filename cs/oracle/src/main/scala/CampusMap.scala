@@ -7,7 +7,9 @@ import javafx.scene.text.Text
 import javafx.stage.Stage
 
 import java.lang.Math.sqrt
+import scala.concurrent.Future
 import scala.util.Random
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object CampusMap {
   def main(args: Array[String]): Unit = launch(classOf[CampusMapApp])
@@ -18,53 +20,87 @@ class CampusMapApp extends Application {
     val root = new Group()
     val scene = new Scene(root, 1000, 800, Color.rgb(236, 240, 241))
 
-    val dorm1 = new Dorm(1, 420, 52, 152, 219)
-    val dorm2 = new Dorm(2, 40, 26, 188, 156)
-    val dorm3 = new Dorm(3, 430, 155, 89, 182)
-    val dorm4 = new Dorm(4, 350, 231, 76, 60)
+    val dorm1 = new Dorm(1, 52, 152, 219)
+    val dorm2 = new Dorm(2, 26, 188, 156)
+    val dorm3 = new Dorm(3, 155, 89, 182)
+    val dorm4 = new Dorm(4, 231, 76, 60)
 
-    val dormitoryCenterPoint = new DormitoryCenterPoint(dorm1, dorm2, dorm3, dorm4)
+    val dorms = List(dorm1, dorm2, dorm3, dorm4)
+
+    // Инициализируем точку центра всех общаг
+    val dormitoryCenterPoint = new DormitoryCenterPoint(dorms: _*)
+    // Инициализируем точку центра студенческой группы
     val studyCenterPoint = new StudyCenterPoint(dorm1, dorm2, dorm4)
 
-    root.getChildren.addAll(dorm1.dormLabel, dorm2.dormLabel, dorm3.dormLabel, dorm4.dormLabel)
-    root.getChildren.addAll(dorm1.populationLabel, dorm2.populationLabel, dorm3.populationLabel, dorm4.populationLabel)
-    root.getChildren.addAll(dorm1.rectangle, dorm2.rectangle, dorm3.rectangle, dorm4.rectangle)
-
-    root.getChildren.addAll(dormitoryCenterPoint.distance, dormitoryCenterPoint.center, dormitoryCenterPoint.label)
-    root.getChildren.addAll(studyCenterPoint.distance, studyCenterPoint.center, studyCenterPoint.label)
-
-    dormitoryCenterPoint.setCenter(dorm1, dorm2, dorm3, dorm4)
-    studyCenterPoint.setCenter(dorm1, dorm2, dorm4)
+    // Добавляем всё на экран
+    root.getChildren.addAll(
+      List(
+        dormitoryCenterPoint.distance,
+        dormitoryCenterPoint.center,
+        dormitoryCenterPoint.label,
+        studyCenterPoint.distance,
+        studyCenterPoint.center,
+        studyCenterPoint.label
+      ) ++
+        dorms.map(_.dormLabel)
+        ++ dorms.map(_.populationLabel)
+        ++ dorms.map(_.rectangle): _*
+    )
 
     stage.setTitle("Карта универа")
     stage.setScene(scene)
     stage.setResizable(false)
     stage.show()
+
+    // Форкаем тред для обновления координат и населения общаг в бекграунде
+    Future {
+      while (true) {
+        Thread.sleep(2000)
+
+        dorm1.refresh()
+        dorm2.refresh()
+        dorm3.refresh()
+        dorm4.refresh()
+
+        dormitoryCenterPoint.setCenter(dorm1, dorm2, dorm3, dorm4)
+        studyCenterPoint.setCenter(dorm1, dorm2, dorm4)
+      }
+    }
   }
 }
 
-class Dorm(id: Int, val population: Double = 1, r: Int, g: Int, b: Int) {
+class Dorm(id: Int, r: Int, g: Int, b: Int) {
   val rectangle = new Rectangle(0, 0, 10, 10)
   var width = 0
+  var population = 0
+
+  var x: Int = id * 200
+  var y: Int = 0
+
   val dormLabel = new Text(0, 40, s"Общага $id")
-  val populationLabel = new Text(0, 40, "Проживает: " + population.toInt)
+  val populationLabel = new Text(0, 40, "")
 
-  val x: Int = id * 200
-  val y: Int = Random.between(100, 600)
+  refresh()
 
-  width = sqrt(population * 10).toInt
+  def refresh(): Unit = {
+    y = Random.between(100, 600)
+    population = Random.between(100, 500)
 
-  rectangle.setHeight(width)
-  rectangle.setWidth(width)
-  rectangle.setFill(Color.rgb(r, g, b))
-  rectangle.setLayoutX(x - (width / 2))
-  rectangle.setLayoutY(y - (width / 2))
+    width = sqrt(population * 10).toInt
 
-  dormLabel.setLayoutY(y + (width / 2) - 25)
-  dormLabel.setLayoutX(x - (width / 2))
+    rectangle.setHeight(width)
+    rectangle.setWidth(width)
+    rectangle.setFill(Color.rgb(r, g, b))
+    rectangle.setLayoutX(x - (width / 2))
+    rectangle.setLayoutY(y - (width / 2))
 
-  populationLabel.setLayoutY(y + (width / 2) - 10)
-  populationLabel.setLayoutX(x - (width / 2))
+    dormLabel.setLayoutY(y + (width / 2) - 25)
+    dormLabel.setLayoutX(x - (width / 2))
+
+    populationLabel.setLayoutY(y + (width / 2) - 10)
+    populationLabel.setLayoutX(x - (width / 2))
+    populationLabel.setText("Проживает: " + population)
+  }
 
   def getX: Double = x + (width / 2)
 
